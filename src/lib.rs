@@ -67,7 +67,7 @@ pub use crate::keymap::{Anchor, At, CharSearch, Cmd, InputMode, Movement, Repeat
 use crate::keymap::{Bindings, InputState, Refresher};
 pub use crate::keys::{KeyCode, KeyEvent, Modifiers};
 use crate::kill_ring::KillRing;
-use crate::prompt::PromptUpdater;
+use crate::prompt::Prompt;
 pub use crate::tty::ExternalPrinter;
 pub use crate::undo::Changeset;
 use crate::validate::Validator;
@@ -546,17 +546,11 @@ fn readline_direct(
 /// (parse current line once)
 pub trait Helper
 where
-    Self: Completer + Hinter + Highlighter + Validator + PromptUpdater,
+    Self: Completer + Hinter + Highlighter + Validator,
 {
 }
 
 impl Helper for () {}
-
-impl PromptUpdater for () {
-    fn update_prompt(&self, _line: &str) -> Option<String> {
-        None
-    }
-}
 
 /// Completion/suggestion context
 pub struct Context<'h> {
@@ -597,6 +591,7 @@ pub struct Editor<H: Helper, I: History> {
     kill_ring: KillRing,
     config: Config,
     custom_bindings: Bindings,
+    prompt: Prompt,
 }
 
 /// Default editor with no helper and `DefaultHistory`
@@ -633,6 +628,7 @@ impl<H: Helper, I: History> Editor<H, I> {
             kill_ring: KillRing::new(60),
             config,
             custom_bindings: Bindings::new(),
+            prompt: Prompt::new("".to_string()),
         })
     }
 
@@ -699,7 +695,13 @@ impl<H: Helper, I: History> Editor<H, I> {
 
         self.kill_ring.reset(); // TODO recreate a new kill ring vs reset
         let ctx = Context::new(&self.history);
-        let mut s = State::new(&mut stdout, prompt, self.helper.as_ref(), ctx);
+        let mut s = State::new(
+            &mut stdout,
+            prompt,
+            self.prompt.clone(),
+            self.helper.as_ref(),
+            ctx,
+        );
 
         let mut input_state = InputState::new(&self.config, &self.custom_bindings);
 
@@ -924,6 +926,11 @@ impl<H: Helper, I: History> Editor<H, I> {
     /// Create an external printer
     pub fn create_external_printer(&mut self) -> Result<<Terminal as Term>::ExternalPrinter> {
         self.term.create_external_printer()
+    }
+
+    /// Get prompt object
+    pub fn get_prompt(&self) -> Prompt {
+        self.prompt.clone()
     }
 
     /// Change cursor visibility
