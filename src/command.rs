@@ -149,6 +149,7 @@ pub fn execute<H: Helper>(
                 | (Cmd::AcceptOrInsertLine { .. }, true, false) => {
                     if valid || !validation_result.has_message() {
                         s.edit_insert('\n', 1)?;
+                        s.reset_prompt();
                     }
                 }
                 _ => unreachable!(),
