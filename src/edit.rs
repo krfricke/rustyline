@@ -314,6 +314,7 @@ impl<H: Helper> Refresher for State<'_, '_, H> {
     }
 
     fn external_print(&mut self, msg: String) -> Result<()> {
+        let new_prompt = self.helper.and_then(|h| h.update_prompt(&msg));
         self.out.clear_rows(&self.layout)?;
         self.layout.end.row = 0;
         self.layout.cursor.row = 0;
@@ -321,7 +322,11 @@ impl<H: Helper> Refresher for State<'_, '_, H> {
         if !msg.ends_with('\n') {
             self.out.write_and_flush("\n")?;
         }
-        self.refresh_line()
+        if let Some(ref prompt) = new_prompt {
+            self.refresh_prompt_and_line(prompt)
+        } else {
+            self.refresh_line()
+        }
     }
 }
 

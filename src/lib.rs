@@ -34,6 +34,7 @@ mod keys;
 mod kill_ring;
 mod layout;
 pub mod line_buffer;
+pub mod prompt;
 #[cfg(feature = "with-sqlite-history")]
 pub mod sqlite_history;
 mod tty;
@@ -66,6 +67,7 @@ pub use crate::keymap::{Anchor, At, CharSearch, Cmd, InputMode, Movement, Repeat
 use crate::keymap::{Bindings, InputState, Refresher};
 pub use crate::keys::{KeyCode, KeyEvent, Modifiers};
 use crate::kill_ring::KillRing;
+use crate::prompt::PromptUpdater;
 pub use crate::tty::ExternalPrinter;
 pub use crate::undo::Changeset;
 use crate::validate::Validator;
@@ -544,11 +546,17 @@ fn readline_direct(
 /// (parse current line once)
 pub trait Helper
 where
-    Self: Completer + Hinter + Highlighter + Validator,
+    Self: Completer + Hinter + Highlighter + Validator + PromptUpdater,
 {
 }
 
 impl Helper for () {}
+
+impl PromptUpdater for () {
+    fn update_prompt(&self, _line: &str) -> Option<String> {
+        None
+    }
+}
 
 /// Completion/suggestion context
 pub struct Context<'h> {
