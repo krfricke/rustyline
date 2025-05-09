@@ -1591,7 +1591,7 @@ mod termios_ {
         raw.control_flags |= ControlFlags::CS8;
         // disable echoing, canonical mode, extended input processing and signals
         raw.local_flags &=
-            !(LocalFlags::ECHO | LocalFlags::ICANON | LocalFlags::IEXTEN | LocalFlags::ISIG);
+            !(LocalFlags::ECHO | LocalFlags::IEXTEN | LocalFlags::ISIG);
 
         if enable_signals {
             raw.local_flags |= LocalFlags::ISIG;
@@ -1605,8 +1605,6 @@ mod termios_ {
         map_key(&mut key_map, &raw, SCI::VINTR, "VINTR", Cmd::Interrupt);
         map_key(&mut key_map, &raw, SCI::VQUIT, "VQUIT", Cmd::Interrupt);
         map_key(&mut key_map, &raw, SCI::VSUSP, "VSUSP", Cmd::Suspend);
-
-        eprintln!("local flags {:?}, has ISIG enabled {}", raw.local_flags, raw.local_flags.contains(LocalFlags::ISIG));
 
         termios::tcsetattr(fd, SetArg::TCSADRAIN, &raw)?;
         Ok((original_mode, key_map))
