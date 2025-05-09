@@ -1593,6 +1593,7 @@ mod termios_ {
         raw.local_flags &=
             !(LocalFlags::ECHO | LocalFlags::ICANON | LocalFlags::IEXTEN | LocalFlags::ISIG);
 
+        eprintln!("DBG enable signals 1: {enable_signals}");
         if enable_signals {
             raw.local_flags |= LocalFlags::ISIG;
         }
@@ -1649,6 +1650,7 @@ mod termios_ {
         // disable echoing, canonical mode, extended input processing and signals
         raw.c_lflag &= !(termios::ECHO | termios::ICANON | termios::IEXTEN | termios::ISIG);
 
+        eprintln!("DBG enable signals 2: {enable_signals}");
         if enable_signals {
             raw.c_lflag |= termios::ISIG;
         }
