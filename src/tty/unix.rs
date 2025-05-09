@@ -1593,7 +1593,6 @@ mod termios_ {
         raw.local_flags &=
             !(LocalFlags::ECHO | LocalFlags::ICANON | LocalFlags::IEXTEN | LocalFlags::ISIG);
 
-        eprintln!("DBG enable signals 1: {enable_signals}");
         if enable_signals {
             raw.local_flags |= LocalFlags::ISIG;
         }
@@ -1606,6 +1605,8 @@ mod termios_ {
         map_key(&mut key_map, &raw, SCI::VINTR, "VINTR", Cmd::Interrupt);
         map_key(&mut key_map, &raw, SCI::VQUIT, "VQUIT", Cmd::Interrupt);
         map_key(&mut key_map, &raw, SCI::VSUSP, "VSUSP", Cmd::Suspend);
+
+        eprintln!("local flags {:?}, has ISIG enabled {}", raw.local_flags, raw.local_flags.contains(LocalFlags::ISIG));
 
         termios::tcsetattr(fd, SetArg::TCSADRAIN, &raw)?;
         Ok((original_mode, key_map))
@@ -1650,7 +1651,6 @@ mod termios_ {
         // disable echoing, canonical mode, extended input processing and signals
         raw.c_lflag &= !(termios::ECHO | termios::ICANON | termios::IEXTEN | termios::ISIG);
 
-        eprintln!("DBG enable signals 2: {enable_signals}");
         if enable_signals {
             raw.c_lflag |= termios::ISIG;
         }
