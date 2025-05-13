@@ -93,7 +93,7 @@ impl Signal {
             b'X' => Self::Resize,
             #[cfg(feature = "signal-hook")]
             other => {
-                tracing::warn!("Rustyline: Invalid signal byte: {}", other);
+                log::warn!("Rustyline: Invalid signal byte: {}", other);
                 // Resize should be safe
                 Self::Resize
             }
