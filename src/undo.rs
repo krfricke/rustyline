@@ -30,7 +30,7 @@ enum Change {
 impl Change {
     fn undo(&self, line: &mut LineBuffer) {
         match *self {
-            Self::Begin | Self::End => unreachable!(),
+            Self::Begin | Self::End => panic!("CUSTOM UNREACHABLE J {line:?}"),
             Self::Insert { idx, ref text } => {
                 line.delete_range(idx..idx + text.len(), &mut NoListener);
             }
@@ -51,7 +51,7 @@ impl Change {
     #[cfg(test)]
     fn redo(&self, line: &mut LineBuffer) {
         match *self {
-            Self::Begin | Self::End => unreachable!(),
+            Self::Begin | Self::End => panic!("CUSTOM UNREACHABLE K {line:?}"),
             Self::Insert { idx, ref text } => {
                 line.insert_str(idx, text, &mut NoListener);
             }
@@ -156,7 +156,7 @@ impl Changeset {
         if let Change::Insert { ref mut text, .. } = last_change {
             text.push(c);
         } else {
-            unreachable!();
+            panic!("CUSTOM UNREACHABLE L {idx} {c:?}");
         }
         self.undos.push(last_change);
     }
@@ -210,7 +210,7 @@ impl Changeset {
                 *idx = indx;
             }
         } else {
-            unreachable!();
+            panic!("CUSTOM UNREACHABLE M {indx} {string:?}");
         }
         self.undos.push(last_change);
     }
@@ -252,7 +252,7 @@ impl Changeset {
             old.push_str(old_.as_ref());
             new.push_str(new_.as_ref());
         } else {
-            unreachable!();
+            panic!("CUSTOM UNREACHABLE N {indx} {old_:?} {new_:?}");
         }
         self.undos.push(last_change);
     }

@@ -207,7 +207,7 @@ impl Cmd {
             // Cmd::TransposeChars => Cmd::TransposeChars,
             Self::ViYankTo(ref mvt) => Self::ViYankTo(mvt.redo(new)),
             Self::Yank(previous, anchor) => Self::Yank(repeat_count(previous, new), anchor),
-            _ => unreachable!(),
+            _ => panic!("CUSTOM UNREACHABLE F {new:?}"),
         }
     }
 }
@@ -487,7 +487,7 @@ impl<'b> InputState<'b> {
             '-' => {
                 self.num_args = -1;
             }
-            _ => unreachable!(),
+            _ => panic!("CUSTOM UNREACHABLE G {digit:?}"),
         }
         loop {
             wrt.refresh_prompt_and_line(&format!("(arg: {}) ", self.num_args))?;
@@ -1001,7 +1001,7 @@ impl<'b> InputState<'b> {
                     't' => CharSearch::ForwardBefore(ch),
                     'F' => CharSearch::Backward(ch),
                     'T' => CharSearch::BackwardAfter(ch),
-                    _ => unreachable!(),
+                    _ => panic!("CUSTOM UNREACHABLE H {cmd:?}"),
                 };
                 self.last_char_search = Some(cs);
                 Some(cs)
@@ -1122,7 +1122,7 @@ impl<'b> InputState<'b> {
     fn vi_num_args(&mut self) -> RepeatCount {
         let num_args = self.num_args();
         if num_args < 0 {
-            unreachable!()
+            panic!("CUSTOM UNREACHABLE I {num_args:?}");
         } else {
             num_args.unsigned_abs() as RepeatCount
         }

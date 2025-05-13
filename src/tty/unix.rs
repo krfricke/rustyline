@@ -773,7 +773,7 @@ impl PosixRawReader {
                 #[cfg(target_os = "macos")]
                 return Ok(Event::Timeout(true));
                 #[cfg(not(target_os = "macos"))]
-                unreachable!()
+                panic!("CUSTOM UNREACHABLE P {timeout:?} {single_esc_abort}");
             } else if let Some(ref pipe_reader) = self.pipe_reader {
                 let mut guard = pipe_reader.lock().unwrap();
                 let mut buf = [0; 1];

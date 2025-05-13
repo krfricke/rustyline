@@ -89,7 +89,7 @@ impl Signal {
         match b {
             b'I' => Self::Interrupt,
             b'W' => Self::Resize,
-            _ => unreachable!(),
+            _ => panic!("CUSTOM UNREACHABLE D {b}"),
         }
     }
 
@@ -97,7 +97,7 @@ impl Signal {
         match sig {
             libc::SIGINT => b'I',
             libc::SIGWINCH => b'W',
-            _ => unreachable!(),
+            _ => panic!("CUSTOM UNREACHABLE E {sig}"),
         }
     }
 }

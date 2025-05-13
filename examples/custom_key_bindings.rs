@@ -62,7 +62,7 @@ impl ConditionalEventHandler for CompleteHintHandler {
                 None
             }
         } else {
-            unreachable!()
+            panic!("CUSTOM UNREACHABLE A: {evt:?}");
         }
     }
 }

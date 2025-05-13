@@ -78,7 +78,7 @@ impl Completer for () {
     type Candidate = String;
 
     fn update(&self, _line: &mut LineBuffer, _start: usize, _elected: &str, _cl: &mut Changeset) {
-        unreachable!();
+        panic!("CUSTOM UNREACHABLE C: {_line:?}");
     }
 }
 

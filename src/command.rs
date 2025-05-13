@@ -152,7 +152,7 @@ pub fn execute<H: Helper>(
                         s.reset_prompt();
                     }
                 }
-                _ => unreachable!(),
+                _ => panic!("CUSTOM UNREACHABLE B: {valid:?} {end:?}"),
             }
         }
         Cmd::BeginningOfHistory => {
