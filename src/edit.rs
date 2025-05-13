@@ -1,7 +1,6 @@
 //! Command processor
 
 use log::debug;
-use std::borrow::Cow;
 use std::fmt;
 use std::sync::Arc;
 use unicode_segmentation::UnicodeSegmentation;
